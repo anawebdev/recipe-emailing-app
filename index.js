@@ -2,7 +2,7 @@ const express = require('express');
 const app = express(); //generates a new app
 
 app.get('/', (req, res) => {
-    res.send({hi: 'there'});
+    res.send({hello: 'there'});
 });
 
 //app.get creates a new route handler. waiting for an http request with a specific handler
