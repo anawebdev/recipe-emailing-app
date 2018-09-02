@@ -1,13 +1,27 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const cookieSession = require('cookie-session');
+const passport = require('passport');
+const keys = require('./config/keys');
+require('./models/User.js');
+require('./services/passport');
+
+mongoose.connect(keys.mongoURI);
+
 const app = express(); //generates a new app
 
-app.get('/', (req, res) => {
-    res.send({hello: 'there'});
-});
+app.use(
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000, //how long can the cookie stay inside the browser before it automatically expires in miliseconds -- this is 30 days
+        keys: [keys.cookieKey] //safety -- we can specify multiple keys that will randomly be picked - that's why it's an array
 
-//app.get creates a new route handler. waiting for an http request with a specific handler
-// '/'  it watches for requests that are accesing a particular route
+    })
+);
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./routes/authRoutes')(app);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT);
