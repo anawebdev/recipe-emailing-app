@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const keys = require('./config/keys');
 
 require('./models/User.js');
+require('./models/Survey.js');
 require('./services/passport');
 
 mongoose.connect(keys.mongoURI);
@@ -29,6 +30,7 @@ app.use(passport.session());
 
 require('./routes/authRoutes')(app);
 require('./routes/billingRoutes')(app);
+require('./routes/surveyRoutes')(app);
 
 //only in production
 if(process.env.NODE_ENV === 'production') {

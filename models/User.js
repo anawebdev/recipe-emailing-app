@@ -12,4 +12,3 @@ const userSchema = new Schema({
 
 mongoose.model('users', userSchema);
 
-//no require statements because to not confuse mongoose
