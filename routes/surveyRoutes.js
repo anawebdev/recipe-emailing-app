@@ -8,7 +8,7 @@ const surveyTemplate = require('../services/emailTemplates/surveyTemplate').defa
 module.exports = app => {
     app.post('/api/surveys', requireLogin, requireCredits, async (req,res) => {
         const { title, subject, body, recipients } = req.body;
-
+            console.log(req.body);
         const survey = new Survey ({
             title,
             body,
@@ -21,7 +21,7 @@ module.exports = app => {
         // Send an email
 
         const mailer = new Mailer(survey, surveyTemplate);
-        console.log(mailer);
-        mailer.send();
+        // console.log(mailer);
+        mailer.send(survey);
     });
 };
