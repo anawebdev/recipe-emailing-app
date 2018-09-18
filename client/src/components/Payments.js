@@ -11,7 +11,7 @@ class Payments extends Component {
 
         return (
             <StripeCheckout
-                name="Emaily"
+                name="Voting App"
                 description="$5 for 5 email credits"
                 amount={500}
                 token={token => this.props.handleToken(token)}//cb function with the token recieved from Stripe 
