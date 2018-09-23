@@ -6,9 +6,17 @@ const Survey = mongoose.model('surveys');// we can use the model class to create
 const surveyTemplate = require('../services/emailTemplates/surveyTemplate').default;
 // check if logged in && if user has enough credits (at least 1)
 module.exports = app => {
+
+    app.get('/api/surveys', requireLogin, async (req, res) => {
+        const surveys = await Survey.find({ _user: req.user.id })
+            .select({ recipients: false });
+
+        res.send(surveys);
+    });
+
     app.post('/api/surveys', requireLogin, requireCredits, async (req,res) => {
         const { title, subject, body, recipients } = req.body;
-            console.log(req.body);
+        
         const survey = new Survey ({
             title,
             body,
@@ -17,11 +25,20 @@ module.exports = app => {
             _user: req.user.id,
             dateSent: Date.now()
         });
+        console.log("SURVEY");
+        console.log(survey);
 
-        // Send an email
+        try {
+            await survey.save();
+            req.user.credits -= 1;
+            const user = await req.user.save();
 
-        const mailer = new Mailer(survey, surveyTemplate);
-        // console.log(mailer);
-        mailer.send(survey);
+            res.send(user);
+        } catch (err) {
+            res.status(422).send(err);
+        }
+        
+
     });
+    
 };
